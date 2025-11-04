@@ -32,7 +32,7 @@ Return the output code in the format <execute> Python code</execute>
 """
     return prompt
 
-def critic_code(plan):
+def critic_code(generated_code):
     prompt = prompt_for_critic(generated_code)
     response = client.chat.completions.create(
     model = "openai:gpt-4o-mini",
