@@ -25,4 +25,3 @@ def execute_generated_code(redefined_code: str):
         print(" No valid <execute> block found.")
         return None
 
-  execute_generated_code(redefined_code)
