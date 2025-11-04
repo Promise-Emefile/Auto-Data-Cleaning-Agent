@@ -10,11 +10,11 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "agents"))
 
 
 # Import your actual agent functions
-from Agents.planner_agent import planner_agent, build_planner_prompt
-from Agents.code_gen_agent import build_code_gen, code_gen_agent
+from Agents.planning_agent import planner_agent, build_planner_prompt
+from Agents.Code_Generating_Agent import build_code_gen, code_gen_agent
 from Agents.critic_agent import prompt_for_critic, critic_code
 from Agents.executor_agent import execute_generated_code
-from Agents.validation_agent import llm_validation_report, programmatic_validation
+from Agents.Validation_agent import llm_validation_report, programmatic_validation
 
 # Streamlit page setup
 st.set_page_config(
