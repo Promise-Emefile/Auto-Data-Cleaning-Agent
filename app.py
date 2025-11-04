@@ -10,7 +10,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "agents"))
 
 
 # Import your actual agent functions
-from Agents.planning_agent import planner_agent, build_planner_prompt
+from Agents.planning_agent import planner_agent, build_planner_prompt, build_dataset_summary
 from Agents.Code_Generating_Agent import build_code_gen, code_gen_agent
 from Agents.critic_agent import prompt_for_critic, critic_code
 from Agents.executor_agent import execute_generated_code
@@ -35,7 +35,8 @@ if uploaded_file:
     if st.button("Run Auto Cleaning Pipeline"):
         # Step 2: Planning
         with st.spinner("Generating cleaning plan..."):
-            plan = planner_agent(df)
+            summary = build_dataset_summary(df)
+            plan = planner_agent(summary)
         st.success("Cleaning plan generated successfully!")
         st.code(plan, language="markdown")
 
