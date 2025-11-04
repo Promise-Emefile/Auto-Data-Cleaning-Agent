@@ -3,11 +3,9 @@ import pandas as pd
 import sys
 import os
 
-
 # Ensure current folder and "agents" subfolder are on the path
 sys.path.append(os.path.dirname(__file__))
 sys.path.append(os.path.join(os.path.dirname(__file__), "agents"))
-
 
 # Import your actual agent functions
 from Agents.planning_agent import planner_agent, build_planner_prompt, build_dataset_summary
@@ -56,10 +54,22 @@ if uploaded_file:
         with st.spinner("Executing refined code..."):
             cleaned_df = execute_generated_code(refined_code)
 
+        # Step 6: Validation should run after cleaning
         if cleaned_df is not None:
-            st.success("Data Cleaned successfully!")
+            st.success("Data cleaned successfully!")
             st.dataframe(cleaned_df.head())
 
+            with st.spinner("Validating cleaned data (programmatic + LLM)..."):
+                validation_prog = programmatic_validation(cleaned_df)
+                validation_llm = llm_validation_report(client, cleaned_df, validation_prog)
+
+            st.write("### Programmatic Validation Report")
+            st.json(validation_prog)
+
+            st.write("### LLM Validation Report")
+            st.markdown(validation_llm)
+
+            # Download cleaned dataset
             csv_data = cleaned_df.to_csv(index=False).encode("utf-8")
             st.download_button(
                 label="Download Cleaned Dataset",
@@ -70,11 +80,4 @@ if uploaded_file:
         else:
             st.error("Cleaning failed. Check console for details.")
 
-            # Step 6: Validation
-            with st.spinner("Validating cleaned data (programmatic + LLM)..."):
-                validation_prog = programmatic_validation(cleaned_df)
-                validation_llm = llm_validation_report(client,cleaned_df, validation_prog)
-
-            st.write("### Programmatic Validation Report", validation_prog)
-            st.json(validation_llm)
 
