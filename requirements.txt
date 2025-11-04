@@ -2,6 +2,7 @@ streamlit
 pandas
 python-dotenv
 openai
+aisuite
 tiktoken
 numpy
 scikit-learn
