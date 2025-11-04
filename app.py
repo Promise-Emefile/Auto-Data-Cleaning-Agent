@@ -52,7 +52,7 @@ if uploaded_file:
 
         # Step 5: Execute refined code
         with st.spinner("Executing refined code..."):
-            cleaned_df = execute_generated_code(refined_code,df)
+            cleaned_df = execute_generated_code(refined_code, df)
 
         # Step 6: Validation should run after cleaning
         if cleaned_df is not None:
