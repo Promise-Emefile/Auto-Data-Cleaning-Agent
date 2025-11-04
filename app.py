@@ -4,7 +4,8 @@ import sys
 import os
 
 # Ensure the "agents" folder is discoverable
-sys.path.append(os.path.join(os.path.dirname(__file__), "agents"))
+sys.path.append(os.path.dirname(_file_))  # ensure current folder on path
+sys.path.append(os.path.join(os.path.dirname(_file_), "agents"))
 
 # Import your actual agent functions
 from agents.planner_agent import planner_agent, build_planner_prompt
