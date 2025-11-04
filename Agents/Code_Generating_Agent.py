@@ -57,6 +57,6 @@ def code_gen_agent(plan, df=None):
     code = response.choices[0].message.content.strip()
     return code
 
-generated_code = code_gen_agent(plan)
+generated_code = code_gen_agent(plan,df)
 print(generated_code)
 
