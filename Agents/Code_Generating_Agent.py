@@ -7,9 +7,11 @@ import aisuite as ai
 load_dotenv()
 client = ai.Client()
 
-columns = df.columns
-
-def build_code_gen(plan):
+def build_code_gen(plan, df=None):
+    """Builds a code generation propmt based on planner output and optional dataframe info."""
+    column_info = ""
+    if df is not None:
+        column_info = f"\n\nThe dataset has the following columns:\n{df.dtypyes.to_dict()}"
     prompt = f"""
     You are a CODE GENERATOR AI AGENT.
 
@@ -19,6 +21,8 @@ def build_code_gen(plan):
 
     PLANNER STEPS:
     {plan}
+
+    {column_info}
 
     Your task:
     - Translate each planner step into *fully functional, safe, and efficient Python code* using pandas.
@@ -39,8 +43,8 @@ def build_code_gen(plan):
     """
     return prompt
 
-def code_gen_agent(plan):
-    prompt = build_code_gen(plan)
+def code_gen_agent(plan, df=None):
+    prompt = build_code_gen(plan, df)
 
     response = client.chat.completions.create(
         model="openai:gpt-4o-mini",
