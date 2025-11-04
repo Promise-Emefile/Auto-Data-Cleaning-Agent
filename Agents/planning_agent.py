@@ -7,12 +7,14 @@ import aisuite as ai
 load_dotenv()
 client = ai.Client()
 
-summary = {
+def build_dataset_summary(df: pd.DataFrame):
+    summary = {
     "shape": df.shape,
     "missing_values": df.isna().sum().to_dict(),
     "dtypes": df.dtypes.astype(str).to_dict(),
     "duplicates": df.duplicated().sum()
 }
+    return summary
 
 def build_planner_prompt(summary):
     prompt = f"""
@@ -57,5 +59,5 @@ def planner_agent(summary):
 
     return plan
 
-plan= planner_agent(summary)
-plan
+summary = build_dataset_summary(df)
+plan = planner_agent(summary)
