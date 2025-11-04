@@ -42,7 +42,7 @@ if uploaded_file:
 
         # Step 3: Code generation
         with st.spinner("Generating data cleaning code..."):
-            code_output = code_gen_agent(plan)
+            code_output = code_gen_agent(plan, df)
         st.success("Code generated successfully!")
         st.code(code_output, language="python")
 
