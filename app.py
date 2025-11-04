@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
-from agents.planner_agent import planner_agent
-from agents.code_generator_agent import code_generator_agent
+from agents.planning_agent import planning_agent
+from agents.Code_Generating_agent import Code_Generating_Agent
 from agents.critic_agent import critic_agent
-from agents.executor_agent import execute_generated_code
-from agents.validation_agent import validation_agent
+from agents.executor_agent import execute_code
+from agents.Validation_agent import Validation_agent
 
 # Set page layout and metadata
 st.set_page_config(page_title="Auto Data Cleaning Agent", layout="wide")
@@ -22,12 +22,12 @@ if uploaded_file:
 
     if st.button("Run Auto Cleaning Pipeline"):
         with st.spinner("Planning cleaning steps..."):
-            plan = planner_agent(df)
+            plan = planning_agent(df)
         st.success("Plan generated successfully!")
         st.code(plan, language="markdown")
 
         with st.spinner("Generating cleaning code..."):
-            gen_code = code_generator_agent(plan)
+            gen_code = Code_Generating_agent(plan)
         st.success("Code generated!")
         st.code(gen_code, language="python")
 
