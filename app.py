@@ -57,8 +57,18 @@ if uploaded_file:
             cleaned_df = execute_generated_code(refined_code)
 
         if cleaned_df is not None:
-            st.success("Code executed successfully!")
-            st.write("### Cleaned Dataset Preview", cleaned_df.head())
+            st.success("Data Cleaned successfully!")
+            st.dataframe(cleaned_df.head())
+
+            csv_data = cleaned_df.to_csv(index=False).encode("utf-8")
+            st.download_button(
+                label="Download Cleaned Dataset",
+                data=csv_data,
+                file_name="cleaned_dataset.csv",
+                mime="text/csv"
+            )
+        else:
+            st.error("Cleaning failed. Check console for details.")
 
             # Step 6: Validation
             with st.spinner("Validating cleaned data (programmatic + LLM)..."):
