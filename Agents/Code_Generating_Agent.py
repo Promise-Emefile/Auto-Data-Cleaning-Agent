@@ -11,7 +11,7 @@ def build_code_gen(plan, df=None):
     """Builds a code generation propmt based on planner output and optional dataframe info."""
     column_info = ""
     if df is not None:
-        column_info = f"\n\nThe dataset has the following columns:\n{df.dtypyes.to_dict()}"
+        column_info = f"\n\nThe dataset has the following columns:\n{df.dtypes.to_dict()}"
     prompt = f"""
     You are a CODE GENERATOR AI AGENT.
 
