@@ -3,7 +3,6 @@ import numpy as np
 import openai
 from dotenv import load_dotenv
 import aisuite as ai
-import display_functions
 
 load_dotenv()
 client = ai.Client()
