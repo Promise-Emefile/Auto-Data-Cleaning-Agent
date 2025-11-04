@@ -12,7 +12,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "agents"))
 # Import your actual agent functions
 from Agents.planning_agent import planner_agent, build_planner_prompt, build_dataset_summary
 from Agents.Code_Generating_Agent import build_code_gen, code_gen_agent
-from Agents.critic_agent import prompt_for_critic, critic_code
+from Agents.Critic_agent import prompt_for_critic, critic_code
 from Agents.executor_agent import execute_generated_code
 from Agents.Validation_agent import llm_validation_report, programmatic_validation
 
