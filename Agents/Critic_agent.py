@@ -44,5 +44,4 @@ def critic_code(plan):
     critic_gen_code = response.choices[0].message.content.strip()
     return critic_gen_code
 
-redefined_code = critic_code(plan)
-print(redefined_code)
+
