@@ -86,7 +86,3 @@ def llm_validation_report(client, df, programmatic_report):
 
     return response.choices[0].message.content
 
-programmatic_report = programmatic_validation(df)
-final_validation = llm_validation_report(client, df, programmatic_report)
-
-print(final_validation)
