@@ -63,7 +63,8 @@ if uploaded_file:
             # Step 6: Validation
             with st.spinner("Validating cleaned data (programmatic + LLM)..."):
                 validation_prog = programmatic_validation(cleaned_df)
-                validation_llm = llm_validation_report(cleaned_df)
+                validation_llm = llm_validation_report(client,cleaned_df, validation_prog)
 
             st.write("### Programmatic Validation Report", validation_prog)
+            st.json(validation_llm)
 
