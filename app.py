@@ -1,53 +1,65 @@
 import streamlit as st
 import pandas as pd
-from Agents.planning_agent import planner_agent
-from Agents.Code_Generating_agent import code_generator_agent
-from Agents.critic_agent import critic_code
-from Agents.executor_agent import execute_generated_code
-from Agents.Validation_agent import validation_agent
+import sys
+import os
 
-# Set page layout and metadata
-st.set_page_config(page_title="Auto Data Cleaning Agent", layout="wide")
+# Ensure the "agents" folder is discoverable
+sys.path.append(os.path.join(os.path.dirname(__file__), "agents"))
 
-# Page header
+# Import your actual agent functions
+from agents.planner_agent import planner_agent, build_planner_prompt
+from agents.code_gen_agent import build_code_gen, code_gen_agent
+from agents.critic_agent import prompt_for_critic, critic_code
+from agents.executor_agent import execute_generated_code
+from agents.validation_agent import llm_validation_report, programmatic_validation
+
+# Streamlit page setup
+st.set_page_config(
+    page_title="Auto Data Cleaning Agent",
+    layout="wide"
+)
+
 st.title("Auto Data Cleaning Agent")
-st.caption("LLM-powered multi-agent pipeline for autonomous data cleaning and validation")
+st.caption("A multi-agent LLM-powered pipeline for autonomous data cleaning and validation.")
 
-# File upload
-uploaded_file = st.file_uploader("Upload a CSV file to clean", type=["csv"])
+# Step 1: Upload dataset
+uploaded_file = st.file_uploader("Upload your CSV dataset", type=["csv"])
 
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
-    st.write("### Raw Dataset", df.head())
+    st.write("### Raw Dataset Preview", df.head())
 
     if st.button("Run Auto Cleaning Pipeline"):
-        with st.spinner("Planning cleaning steps..."):
-            plan = planning_agent(df)
-        st.success("Plan generated successfully!")
+        # Step 2: Planning
+        with st.spinner("Generating cleaning plan..."):
+            plan = planner_agent(df)
+        st.success("Cleaning plan generated successfully!")
         st.code(plan, language="markdown")
 
-        with st.spinner("Generating cleaning code..."):
-            gen_code = Code_Generating_agent(plan)
-        st.success("Code generated!")
-        st.code(gen_code, language="python")
+        # Step 3: Code generation
+        with st.spinner("Generating data cleaning code..."):
+            code_output = code_gen_agent(plan)
+        st.success("Code generated successfully!")
+        st.code(code_output, language="python")
 
-        with st.spinner("Refining with critic agent..."):
-            critic_code = critic_agent(gen_code)
-        st.success("Critic produced refined code!")
-        st.code(critic_code, language="python")
+        # Step 4: Critic refinement
+        with st.spinner("Critic agent reviewing and refining code..."):
+            refined_code = critic_code(code_output)
+        st.success("Critic agent produced refined code!")
+        st.code(refined_code, language="python")
 
+        # Step 5: Execute refined code
         with st.spinner("Executing refined code..."):
-            execute_generated_code(critic_code)
+            cleaned_df = execute_generated_code(refined_code)
 
-        # After execution, check if df exists in globals
-        if 'df' in globals():
-            cleaned_df = globals()['df']
-            st.success("Execution successful!")
+        if cleaned_df is not None:
+            st.success("Code executed successfully!")
             st.write("### Cleaned Dataset Preview", cleaned_df.head())
 
-            with st.spinner("Validating cleaned data..."):
-                validation = validation_agent(cleaned_df)
-            st.write("### Validation Report", validation)
-        else:
-            st.error("No cleaned dataframe detected after execution. Check critic output for issues.")
+            # Step 6: Validation
+            with st.spinner("Validating cleaned data (programmatic + LLM)..."):
+                validation_prog = programmatic_validation(cleaned_df)
+                validation_llm = llm_validation_report(cleaned_df)
+
+            st.write("### Programmatic Validation Report", validation_prog)
 
