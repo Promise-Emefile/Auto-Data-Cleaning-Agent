@@ -8,7 +8,7 @@ load_dotenv()
 client = ai.Client()
 
 
-def prompt_for_critic(generated_code):
+def prompt_for_critic(code_output):
     prompt = f"""
     You are a Senior Data Cleaning Agent.
     Here is the DataFrame info summary{summary}
@@ -32,8 +32,8 @@ Return the output code in the format <execute> Python code</execute>
 """
     return prompt
 
-def critic_code(generated_code):
-    prompt = prompt_for_critic(generated_code)
+def critic_code(code_output):
+    prompt = prompt_for_critic(code_output)
     response = client.chat.completions.create(
     model = "openai:gpt-4o-mini",
     temperature=0,
