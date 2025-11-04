@@ -59,5 +59,3 @@ def planner_agent(summary):
 
     return plan
 
-summary = build_dataset_summary(df)
-plan = planner_agent(summary)
