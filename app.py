@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
-from agents.planning_agent import planning_agent
-from agents.Code_Generating_agent import Code_Generating_Agent
-from agents.critic_agent import critic_agent
-from agents.executor_agent import execute_code
-from agents.Validation_agent import Validation_agent
+from Agents.planning_agent import planning_agent
+from Agents.Code_Generating_agent import Code_Generating_Agent
+from Agents.critic_agent import critic_agent
+from Agents.executor_agent import execute_code
+from Agents.Validation_agent import Validation_agent
 
 # Set page layout and metadata
 st.set_page_config(page_title="Auto Data Cleaning Agent", layout="wide")
