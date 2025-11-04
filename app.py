@@ -3,9 +3,11 @@ import pandas as pd
 import sys
 import os
 
-# Ensure the "agents" folder is discoverable
-sys.path.append(os.path.dirname(_file_))  # ensure current folder on path
-sys.path.append(os.path.join(os.path.dirname(_file_), "agents"))
+
+# Ensure current folder and "agents" subfolder are on the path
+sys.path.append(os.path.dirname(__file__))
+sys.path.append(os.path.join(os.path.dirname(__file__), "agents"))
+
 
 # Import your actual agent functions
 from agents.planner_agent import planner_agent, build_planner_prompt
