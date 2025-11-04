@@ -57,3 +57,6 @@ def planner_agent(summary):
         plan = {"actions": [reply], "priority_order": []}
 
     return plan
+
+plan= planner_agent(summary)
+plan
