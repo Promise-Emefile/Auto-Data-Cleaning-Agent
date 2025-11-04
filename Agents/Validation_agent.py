@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from openai import OpenAI
+import openai
 from dotenv import load_dotenv
 import aisuite as ai
 import display_functions
