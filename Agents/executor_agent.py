@@ -16,6 +16,8 @@ def execute_generated_code(redefined_code: str, df: pd.DataFrame):
     match = re.search(r"<execute>([\s\S]*?)</execute>", redefined_code)
     if match:
         code = match.group(1).strip()
+    else: 
+        code = redefined_code.strip()
         try:
             exec_globals = {"df": df.copy()}
             exec(code, exec_globals)  # run code in isolated context
