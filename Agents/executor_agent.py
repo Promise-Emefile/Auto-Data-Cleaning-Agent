@@ -17,10 +17,11 @@ def execute_generated_code(redefined_code: str, df: pd.DataFrame):
     if match:
         code = match.group(1).strip()
         try:
-            exec_globals = {"pd": pd, "np": np, "df": df.copy()}
+            exec_globals = {"df": df.copy()}
             exec(code, exec_globals)  # run code in isolated context
             print("Code executed successfully.")
-            return exec_globals.get("df", None)
+            cleaned_df = exec_globals.get("df", None)
+            return cleaned_df
         except Exception as e:
             print(f"Execution error: {e}")
             return None
