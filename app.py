@@ -87,7 +87,7 @@ if uploaded_file:
                 st.code(re_clean_code, language="python")
 
                 # Execute re-cleaning
-                with st.spinner("⚙ Running targeted re-cleaning..."):
+                with st.spinner("Running targeted re-cleaning..."):
                     cleaned_df_v2 = execute_generated_code(re_clean_code, cleaned_df)
 
                 if cleaned_df_v2 is not None:
