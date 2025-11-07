@@ -67,18 +67,18 @@ st.json(validation_llm)
 
 # Step 7: Feedback loop — if validation failed, trigger focused re-cleaning
 if validation_prog["validation_result"].startswith("Fail"):
-    st.warning("⚠ Validation failed — initiating targeted re-cleaning...")
+    st.warning("Validation failed — initiating targeted re-cleaning...")
 
     from Agents.feedback_agent import feedback_to_plan
 
     # Generate a focused repair plan
-    with st.spinner("🧩 Generating repair plan from validation feedback..."):
+    with st.spinner("Generating repair plan from validation feedback..."):
         feedback_plan = feedback_to_plan(validation_prog, cleaned_df)
-    st.success("✅ Repair plan generated successfully!")
+    st.success("Repair plan generated successfully!")
     st.json(feedback_plan)
 
     # Generate refined code using same code generator
-    with st.spinner("🧠 Generating targeted re-cleaning code..."):
+    with st.spinner("Generating targeted re-cleaning code..."):
         re_clean_code = code_gen_agent(feedback_plan, cleaned_df)
     st.code(re_clean_code, language="python")
 
@@ -87,14 +87,14 @@ if validation_prog["validation_result"].startswith("Fail"):
         cleaned_df_v2 = execute_generated_code(re_clean_code, cleaned_df)
 
     if cleaned_df_v2 is not None:
-        st.success("✅ Re-cleaning successful!")
+        st.success("Re-cleaning successful!")
         st.dataframe(cleaned_df_v2.head())
 
         # Optional re-validation
         final_validation = programmatic_validation(cleaned_df_v2)
-        st.write("### 🔍 Final Validation Report", final_validation)
+        st.write("###Final Validation Report", final_validation)
 
-        # ✅ Add download option after re-cleaning
+        # Add download option after re-cleaning
         csv_data_v2 = cleaned_df_v2.to_csv(index=False).encode("utf-8")
         st.download_button(
             label="⬇ Download Re-Cleaned Dataset",
@@ -103,4 +103,4 @@ if validation_prog["validation_result"].startswith("Fail"):
             mime="text/csv"
         )
     else:
-        st.error("❌ Re-cleaning execution failed. Check generated code or logs.")
+        st.error("Re-cleaning execution failed. Check generated code or logs.")
