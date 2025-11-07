@@ -57,6 +57,10 @@ if uploaded_file:
         with st.spinner("Executing refined code..."):
             cleaned_df = execute_generated_code(refined_code, df)
 
+        if cleaned_df is not None:
+            st.success("Data cleaned successfully!")
+            st.dataframe(cleaned_df.head())
+
        # Step 6: Validation
 with st.spinner("Validating cleaned data (programmatic + LLM)..."):
     validation_prog = programmatic_validation(cleaned_df)
