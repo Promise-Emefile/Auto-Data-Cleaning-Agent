@@ -57,30 +57,50 @@ if uploaded_file:
         with st.spinner("Executing refined code..."):
             cleaned_df = execute_generated_code(refined_code, df)
 
-        # Step 6: Validation should run after cleaning
-        if cleaned_df is not None:
-            st.success("Data cleaned successfully!")
-            st.dataframe(cleaned_df.head())
+       # Step 6: Validation
+with st.spinner("Validating cleaned data (programmatic + LLM)..."):
+    validation_prog = programmatic_validation(cleaned_df)
+    validation_llm = llm_validation_report(client, cleaned_df, validation_prog)
 
-            with st.spinner("Validating cleaned data (programmatic + LLM)..."):
-                validation_prog = programmatic_validation(cleaned_df)
-                validation_llm = llm_validation_report(client, cleaned_df, validation_prog)
+st.write("### Programmatic Validation Report", validation_prog)
+st.json(validation_llm)
 
-            st.write("### Programmatic Validation Report")
-            st.json(validation_prog)
+# Step 7: Feedback loop — if validation failed, trigger focused re-cleaning
+if validation_prog["validation_result"].startswith("Fail"):
+    st.warning("⚠ Validation failed — initiating targeted re-cleaning...")
 
-            st.write("### LLM Validation Report")
-            st.markdown(validation_llm)
+    from Agents.feedback_agent import feedback_to_plan
 
-            # Download cleaned dataset
-            csv_data = cleaned_df.to_csv(index=False).encode("utf-8")
-            st.download_button(
-                label="Download Cleaned Dataset",
-                data=csv_data,
-                file_name="cleaned_dataset.csv",
-                mime="text/csv"
-            )
-        else:
-            st.error("Cleaning failed. Check console for details.")
+    # Generate a focused repair plan
+    with st.spinner("🧩 Generating repair plan from validation feedback..."):
+        feedback_plan = feedback_to_plan(validation_prog, cleaned_df)
+    st.success("✅ Repair plan generated successfully!")
+    st.json(feedback_plan)
 
+    # Generate refined code using same code generator
+    with st.spinner("🧠 Generating targeted re-cleaning code..."):
+        re_clean_code = code_gen_agent(feedback_plan, cleaned_df)
+    st.code(re_clean_code, language="python")
 
+    # Execute re-cleaning
+    with st.spinner("⚙ Running targeted re-cleaning..."):
+        cleaned_df_v2 = execute_generated_code(re_clean_code, cleaned_df)
+
+    if cleaned_df_v2 is not None:
+        st.success("✅ Re-cleaning successful!")
+        st.dataframe(cleaned_df_v2.head())
+
+        # Optional re-validation
+        final_validation = programmatic_validation(cleaned_df_v2)
+        st.write("### 🔍 Final Validation Report", final_validation)
+
+        # ✅ Add download option after re-cleaning
+        csv_data_v2 = cleaned_df_v2.to_csv(index=False).encode("utf-8")
+        st.download_button(
+            label="⬇ Download Re-Cleaned Dataset",
+            data=csv_data_v2,
+            file_name="recleaned_dataset.csv",
+            mime="text/csv"
+        )
+    else:
+        st.error("❌ Re-cleaning execution failed. Check generated code or logs.")
