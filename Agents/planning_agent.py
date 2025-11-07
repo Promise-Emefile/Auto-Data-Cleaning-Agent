@@ -27,8 +27,8 @@ def build_planner_prompt(summary):
 
     Respond in this format:
     {{
-    "actions":["...","..."],
-    "priority_order":["..."]
+    "actions":[...],
+    "priority_order":[...]
     }}
     """
     return prompt
